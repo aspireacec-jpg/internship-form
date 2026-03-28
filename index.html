@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internship Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep:   #0a2e1a;
+    --green-mid:    #1a5c36;
+    --green-main:   #2d8653;
+    --green-bright: #3aad6a;
+    --green-light:  #6dcf96;
+    --green-pale:   #d4f0e0;
+    --green-ghost:  #f0faf4;
+    --gold:         #c9a84c;
+    --gold-light:   #e8c97a;
+    --white:        #ffffff;
+    --off-white:    #f8fcfa;
+    --text-dark:    #0d2218;
+    --text-mid:     #2a4a35;
+    --text-light:   #5a7a65;
+    --border:       rgba(45,134,83,0.18);
+    --shadow-lg:    0 20px 60px rgba(10,46,26,0.18);
+    --radius-sm:    10px;
+    --transition:   all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--green-deep);
+    min-height: 100vh;
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 20%, rgba(45,134,83,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 90% 80%, rgba(26,92,54,0.3) 0%, transparent 60%),
+      linear-gradient(160deg, #071a0e 0%, #0a2e1a 40%, #0d3d22 100%);
+    pointer-events: none;
+  }
+  .hero { position: relative; z-index: 1; text-align: center; padding: 70px 20px 40px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.35);
+    color: var(--gold-light); font-size: 11px; font-weight: 600;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    padding: 7px 18px; border-radius: 50px; margin-bottom: 22px;
+  }
+  .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse-gold 2s infinite; }
+  @keyframes pulse-gold { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 700;
+    color: var(--white); line-height: 1.1; margin-bottom: 16px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--green-bright), var(--gold-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero p { color: rgba(255,255,255,0.6); font-size: 1.05rem; font-weight: 300; max-width: 520px; margin: 0 auto; line-height: 1.7; }
+  .progress-wrap { position: sticky; top: 0; z-index: 100; padding: 0 20px; display: flex; justify-content: center; }
+  .progress-bar-outer { width: 100%; max-width: 720px; height: 3px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+  .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--green-bright), var(--gold)); width: 0%; transition: width 0.4s ease; border-radius: 3px; }
+  .card-wrap { position: relative; z-index: 1; max-width: 780px; margin: 30px auto 80px; padding: 0 16px; }
+  .card { background: rgba(255,255,255,0.97); border-radius: 24px; box-shadow: var(--shadow-lg), 0 0 0 1px rgba(45,134,83,0.08); overflow: hidden; }
+  .section-tabs { display: flex; background: var(--green-ghost); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; padding: 0 4px; }
+  .section-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: none; padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--text-light); background: none; border: none; cursor: pointer;
+    border-bottom: 2px solid transparent; transition: var(--transition); white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn.active { color: var(--green-main); border-bottom-color: var(--green-main); }
+  .tab-btn .tab-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    background: var(--border); color: var(--text-light); transition: var(--transition);
+  }
+  .tab-btn.active .tab-num { background: var(--green-main); color: white; }
+  .tab-btn.done .tab-num  { background: var(--green-bright); color: white; }
+  .form-body { padding: 40px 44px; }
+  @media(max-width:600px){ .form-body { padding: 28px 20px; } }
+  .section-panel { display: none; animation: fadeSlide 0.35s ease; }
+  .section-panel.active { display: block; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .section-heading { margin-bottom: 28px; }
+  .section-heading h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 700; color: var(--text-dark); line-height: 1.2; margin-bottom: 6px; }
+  .section-heading p { color: var(--text-light); font-size: 0.875rem; }
+  .section-divider { width: 48px; height: 3px; background: linear-gradient(90deg, var(--green-main), var(--green-bright)); border-radius: 3px; margin-top: 10px; }
+  .field-grid { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
+  .field-grid .full { grid-column: 1 / -1; }
+  @media(max-width:560px){ .field-grid { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 12px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-mid); }
+  .field label .req { color: var(--green-main); margin-left: 2px; }
+  .field input, .field select, .field textarea {
+    font-family: 'DM Sans', sans-serif; font-size: 0.94rem; color: var(--text-dark);
+    background: var(--off-white); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 16px; outline: none;
+    transition: var(--transition); -webkit-appearance: none; appearance: none;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: #b0c4b8; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--green-main); background: #fff; box-shadow: 0 0 0 3px rgba(45,134,83,0.1);
+  }
+  .field input.error, .field select.error, .field textarea.error {
+    border-color: #e05252; box-shadow: 0 0 0 3px rgba(224,82,82,0.08);
+  }
+  .field textarea { min-height: 110px; resize: vertical; }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232d8653' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; cursor: pointer;
+  }
+  .err-msg { font-size: 11.5px; color: #e05252; display: none; }
+  .field.has-error .err-msg { display: block; }
+  .field-hint { font-size: 11.5px; color: var(--text-light); font-style: italic; }
+  .char-wrap { display: flex; justify-content: space-between; align-items: center; }
+  .char-count { font-size: 11px; color: var(--text-light); }
+  .check-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 10px; }
+  .check-card { position: relative; }
+  .check-card input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .check-card label {
+    display: flex; align-items: center; gap: 8px; padding: 11px 14px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--off-white); font-size: 0.84rem; font-weight: 500;
+    color: var(--text-mid); cursor: pointer; transition: var(--transition);
+    text-transform: none; letter-spacing: 0; user-select: none;
+  }
+  .check-card label::before {
+    content: ''; width: 16px; height: 16px; flex-shrink: 0;
+    border-radius: 4px; border: 1.5px solid var(--green-light);
+    background: white; transition: var(--transition);
+  }
+  .check-card input:checked + label { border-color: var(--green-main); background: var(--green-ghost); color: var(--green-mid); }
+  .check-card input:checked + label::before {
+    background: var(--green-main); border-color: var(--green-main);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l3 3 5-6' stroke='white' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: center;
+  }
+  .other-reveal { display: none; margin-top: 14px; padding: 16px; background: var(--green-ghost); border: 1.5px solid var(--border); border-radius: var(--radius-sm); }
+  .other-reveal.show { display: block; }
+  .upload-zone {
+    border: 2px dashed var(--green-light); border-radius: var(--radius-sm);
+    background: var(--green-ghost); padding: 28px 20px; text-align: center;
+    cursor: pointer; transition: var(--transition); position: relative; overflow: hidden;
+  }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--green-main); background: var(--green-pale); }
+  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 2; }
+  .upload-icon { width: 48px; height: 48px; margin: 0 auto 12px; background: linear-gradient(135deg, var(--green-main), var(--green-bright)); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+  .upload-icon svg { width: 24px; height: 24px; stroke: white; }
+  .upload-zone h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+  .upload-zone p  { font-size: 0.8rem; color: var(--text-light); }
+  .file-name { margin-top: 10px; font-size: 0.85rem; font-weight: 500; color: var(--green-main); display: none; }
+  .file-name.show { display: block; }
+  .step-indicator { display: flex; justify-content: center; gap: 6px; padding: 16px 0 0; }
+  .step-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-pale); transition: var(--transition); }
+  .step-dot.active { background: var(--green-main); width: 20px; border-radius: 4px; }
+  .step-dot.done   { background: var(--green-bright); }
+  .form-nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 44px 36px; border-top: 1px solid var(--border); gap: 12px; }
+  @media(max-width:600px){ .form-nav { padding: 20px 20px 28px; } }
+  .btn {
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+    padding: 13px 28px; border-radius: 50px; border: none; cursor: pointer;
+    transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+  .btn-ghost { background: var(--green-ghost); color: var(--green-main); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { background: var(--green-pale); }
+  .btn-primary { background: linear-gradient(135deg, var(--green-main), var(--green-bright)); color: white; box-shadow: 0 4px 20px rgba(45,134,83,0.35); }
+  .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(45,134,83,0.45); }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--green-deep); box-shadow: 0 4px 20px rgba(201,168,76,0.35); }
+  .btn-gold:hover:not(:disabled) { transform: translateY(-1px); }
+  .btn svg { width: 18px; height: 18px; stroke: currentColor; flex-shrink: 0; }
+  .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.35); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* STATUS BANNER */
+  .status-banner {
+    display: none; margin: 0 44px 20px; padding: 14px 18px;
+    border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 500;
+    align-items: center; gap: 10px;
+  }
+  .status-banner.show { display: flex; }
+  .status-banner.error   { background: #fef2f2; border: 1px solid #fca5a5; color: #b91c1c; }
+  .status-banner.success { background: var(--green-ghost); border: 1px solid var(--green-light); color: var(--green-mid); }
+  @media(max-width:600px){ .status-banner { margin: 0 20px 16px; } }
+
+  /* MODAL */
+  .modal-bg { position: fixed; inset: 0; z-index: 1000; background: rgba(7,20,13,0.75); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-bg.open { display: flex; }
+  .modal { background: white; border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.35); animation: slideUp 0.3s ease; }
+  @keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .modal-header { padding: 28px 36px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; position: sticky; top: 0; background: white; z-index: 1; }
+  .modal-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; color: var(--text-dark); }
+  .modal-header p { color: var(--text-light); font-size: 0.85rem; margin-top: 2px; }
+  .modal-close { width: 36px; height: 36px; border-radius: 50%; background: var(--green-ghost); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-mid); font-size: 20px; flex-shrink: 0; transition: var(--transition); }
+  .modal-close:hover { background: var(--green-pale); color: var(--green-main); }
+  .modal-body { padding: 28px 36px 36px; }
+  .modal-footer { padding: 20px 36px 28px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap; }
+  @media(max-width:600px){ .modal-header,.modal-body,.modal-footer { padding: 22px; } }
+  .preview-section { margin-bottom: 24px; }
+  .preview-section-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green-main); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .preview-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+  .preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:500px){ .preview-grid { grid-template-columns: 1fr; } }
+  .preview-item.full { grid-column: 1/-1; }
+  .preview-label { font-size: 11px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .preview-value { font-size: 0.9rem; color: var(--text-dark); font-weight: 500; word-break: break-word; }
+  .preview-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .preview-tag { background: var(--green-ghost); border: 1px solid var(--border); color: var(--green-mid); font-size: 12px; font-weight: 500; padding: 3px 12px; border-radius: 50px; }
+  .success-screen { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px 40px; min-height: 300px; }
+  .success-screen.show { display: flex; }
+  .success-icon { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--green-main), var(--green-bright)); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 8px 30px rgba(45,134,83,0.35); animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes pop { from{transform:scale(0)} to{transform:scale(1)} }
+  .success-icon svg { width: 36px; height: 36px; stroke: white; stroke-width: 2.5; }
+  .success-screen h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+  .success-screen p { color: var(--text-light); font-size: 0.95rem; max-width: 380px; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-badge"><span></span>Now Accepting Applications</div>
+  <h1>Internship<br><em>Application Form</em></h1>
+  <p>Take your first step into a world-class professional experience. We invest in talent that is eager to grow.</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="progressBar"></div>
+  </div>
+</div>
+
+<div class="card-wrap">
+  <div class="card">
+
+    <div class="section-tabs" id="tabsRow">
+      <button class="tab-btn active" data-section="0"><span class="tab-num">1</span><span class="tab-label">Personal</span></button>
+      <button class="tab-btn" data-section="1"><span class="tab-num">2</span><span class="tab-label">Education</span></button>
+      <button class="tab-btn" data-section="2"><span class="tab-num">3</span><span class="tab-label">Internship</span></button>
+      <button class="tab-btn" data-section="3"><span class="tab-num">4</span><span class="tab-label">Profile</span></button>
+    </div>
+
+    <form id="mainForm" novalidate>
+
+      <!-- SECTION 0: PERSONAL -->
+      <div class="section-panel active" id="panel-0">
+        <div class="form-body">
+          <div class="section-heading">
+            <h2>Personal Information</h2>
+            <p>Tell us who you are — basic details to get started.</p>
+            <div class="section-divider"></div>
+          </div>
+          <div class="field-grid">
+            <div class="field full">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="name" placeholder="e.g. Sita Sharma">
+              <span class="err-msg">Please enter your full name.</span>
+            </div>
+            <div class="field">
+              <label>Age <span class="req">*</span></label>
+              <input type="number" id="age" placeholder="e.g. 22" min="16" max="45">
+              <span class="err-msg">Enter a valid age (16–45).</span>
+            </div>
+            <div class="field">
+              <label>Contact Number <span class="req">*</span></label>
+              <input type="tel" id="contact" placeholder="e.g. 98XXXXXXXX">
+              <span class="err-msg">Enter a valid phone number.</span>
+            </div>
+            <div class="field full">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="yourname@example.com">
+              <span class="err-msg">Enter a valid email address.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 1: EDUCATION -->
+      <div class="section-panel" id="panel-1">
+        <div class="form-body">
+          <div class="section-heading">
+            <h2>Education & Qualifications</h2>
+            <p>Your academic background and any certifications earned.</p>
+            <div class="section-divider"></div>
+          </div>
+          <div class="field-grid">
+            <div class="field full">
+              <label>Highest Qualification <span class="req">*</span></label>
+              <select id="education">
+                <option value="" disabled selected>Select your qualification</option>
+                <option value="Below SEE">Below SEE</option>
+                <option value="SEE">SEE (Secondary Education Examination)</option>
+                <option value="SLC">SLC (School Leaving Certificate)</option>
+                <option value="Bachelor's">Bachelor's Degree</option>
+                <option value="Master's">Master's Degree</option>
+              </select>
+              <span class="err-msg">Please select your qualification.</span>
+            </div>
+            <div class="field full">
+              <label>Certifications <span style="color:var(--text-light);font-weight:400;text-transform:none;letter-spacing:0;">(if any)</span></label>
+              <input type="text" id="certifications" placeholder="e.g. Google Analytics, First Aid, IELTS 7.0…">
+              <span class="field-hint">Separate multiple certifications with commas.</span>
+            </div>
+            <div class="field full">
+              <div class="char-wrap">
+                <label>Skills <span class="req">*</span></label>
+                <span class="char-count" id="skillsCount">0 / 300</span>
+              </div>
+              <textarea id="skills" placeholder="List your key skills, e.g. MS Office, Python, Content Writing…" maxlength="300"></textarea>
+              <span class="err-msg">Please describe your skills.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: INTERNSHIP -->
+      <div class="section-panel" id="panel-2">
+        <div class="form-body">
+          <div class="section-heading">
+            <h2>Internship Preference</h2>
+            <p>Choose the domain(s) you'd like to intern in.</p>
+            <div class="section-divider"></div>
+          </div>
+          <div class="field-grid">
+            <div class="field full">
+              <label>Internship Domain <span class="req">*</span></label>
+              <div class="check-group">
+                <div class="check-card"><input type="checkbox" id="dm"   name="internship" value="Digital Marketing"><label for="dm">Digital Marketing</label></div>
+                <div class="check-card"><input type="checkbox" id="ai"   name="internship" value="AI"><label for="ai">Artificial Intelligence</label></div>
+                <div class="check-card"><input type="checkbox" id="hosp" name="internship" value="Hospitality"><label for="hosp">Hospitality</label></div>
+                <div class="check-card"><input type="checkbox" id="eng"  name="internship" value="Engineering"><label for="eng">Engineering</label></div>
+                <div class="check-card"><input type="checkbox" id="nurs" name="internship" value="Nursing"><label for="nurs">Nursing</label></div>
+                <div class="check-card"><input type="checkbox" id="othr" name="internship" value="Other"><label for="othr">Other</label></div>
+              </div>
+              <div class="other-reveal" id="otherReveal">
+                <div class="field" style="margin-top:0;">
+                  <label>Please specify <span class="req">*</span></label>
+                  <input type="text" id="otherText" placeholder="e.g. Finance, Law, Architecture…">
+                  <span class="err-msg">Please specify the domain.</span>
+                </div>
+              </div>
+              <span class="err-msg" id="internshipErr" style="display:none;">Please select at least one domain.</span>
+            </div>
+            <div class="field full">
+              <label>Core Interest / Goal <span class="req">*</span></label>
+              <input type="text" id="coreInterest" placeholder="e.g. I want to master SEO strategy…">
+              <span class="err-msg">Please specify your core interest.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: PROFILE -->
+      <div class="section-panel" id="panel-3">
+        <div class="form-body">
+          <div class="section-heading">
+            <h2>Your Profile</h2>
+            <p>Tell us why you are the perfect fit, and upload your CV.</p>
+            <div class="section-divider"></div>
+          </div>
+          <div class="field-grid">
+            <div class="field full">
+              <div class="char-wrap">
+                <label>Why are you suited for this internship? <span class="req">*</span></label>
+                <span class="char-count" id="whyCount">0 / 600</span>
+              </div>
+              <textarea id="whyMe" placeholder="Describe your motivation, relevant experience, and what unique value you bring…" maxlength="600" style="min-height:140px;"></textarea>
+              <span class="err-msg">Please write your motivation (min. 50 characters).</span>
+            </div>
+            <div class="field full">
+              <label>Upload CV / Resume <span class="req">*</span></label>
+              <div class="upload-zone" id="uploadZone">
+                <input type="file" id="cvFile" accept=".pdf,.doc,.docx">
+                <div class="upload-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                  </svg>
+                </div>
+                <h3>Drop your CV here or click to browse</h3>
+                <p>PDF, DOC, DOCX — max 5 MB</p>
+                <div class="file-name" id="fileName"></div>
+              </div>
+              <span class="err-msg" id="cvErr" style="display:none;">Please upload your CV (PDF, DOC, or DOCX).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- STATUS BANNER (shows errors during submit) -->
+    <div class="status-banner error" id="statusBanner">
+      ⚠ <span id="statusMsg"></span>
+    </div>
+
+    <div class="step-indicator" id="stepDots">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="form-nav" id="formNav">
+      <button type="button" class="btn btn-ghost" id="btnBack" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back
+      </button>
+      <div style="flex:1"></div>
+      <button type="button" class="btn btn-primary" id="btnNext">
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button type="button" class="btn btn-gold" id="btnPreview" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Preview & Submit
+      </button>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2>Application Submitted!</h2>
+      <p>Thank you for applying. Our team will review your application and get back to you within 5 business days.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="modal-bg" id="previewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2>Review Your Application</h2>
+        <p>Please verify all details before submitting.</p>
+      </div>
+      <button class="modal-close" id="closeModal">×</button>
+    </div>
+    <div class="modal-body" id="previewBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="editBtn">Edit Application</button>
+      <button class="btn btn-primary" id="submitBtn">
+        <span id="submitLabel">Submit Application</span>
+        <span class="spinner" id="submitSpinner"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfWfmeUAC4FvHKYGftebG3EhoeWbGWyzT4XvnnjG6UYgzxxiG8MsWiS25hye5GKiYm/exec';
+
+// ── Navigation state ─────────────────────────────────────────
+let current = 0;
+const TOTAL  = 4;
+const panels = Array.from(document.querySelectorAll('.section-panel'));
+const tabs   = Array.from(document.querySelectorAll('.tab-btn'));
+const dots   = Array.from(document.querySelectorAll('.step-dot'));
+const bar    = document.getElementById('progressBar');
+
+function goTo(n) {
+  panels[current].classList.remove('active');
+  tabs[current].classList.remove('active');
+  dots[current].classList.remove('active');
+  if (n > current) dots[current].classList.add('done');
+  current = n;
+  panels[n].classList.add('active');
+  tabs[n].classList.add('active');
+  dots[n].classList.add('active');
+  bar.style.width = ((n / (TOTAL - 1)) * 100) + '%';
+  updateNav();
+  hideBanner();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+tabs.forEach(t => t.addEventListener('click', () => {
+  const s = +t.dataset.section;
+  if (s < current) goTo(s);
+}));
+
+function updateNav() {
+  document.getElementById('btnBack').style.display    = current === 0 ? 'none' : '';
+  document.getElementById('btnNext').style.display    = current < TOTAL - 1 ? '' : 'none';
+  document.getElementById('btnPreview').style.display = current === TOTAL - 1 ? '' : 'none';
+}
+
+// ── Validation ───────────────────────────────────────────────
+function setErr(el)   { el.classList.add('error');    el.closest('.field')?.classList.add('has-error'); }
+function clearErr(el) { el.classList.remove('error'); el.closest('.field')?.classList.remove('has-error'); }
+
+function validate(n) {
+  let ok = true;
+  if (n === 0) {
+    const name = document.getElementById('name');
+    const age  = document.getElementById('age');
+    const cont = document.getElementById('contact');
+    const mail = document.getElementById('email');
+    if (!name.value.trim())                                                       { setErr(name); ok=false; } else clearErr(name);
+    if (!age.value || +age.value < 16 || +age.value > 45)                        { setErr(age);  ok=false; } else clearErr(age);
+    if (!cont.value.trim() || !/^\+?[\d\s\-]{7,15}$/.test(cont.value.trim()))    { setErr(cont); ok=false; } else clearErr(cont);
+    if (!mail.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail.value))    { setErr(mail); ok=false; } else clearErr(mail);
+  }
+  if (n === 1) {
+    const edu = document.getElementById('education');
+    const skl = document.getElementById('skills');
+    if (!edu.value)        { setErr(edu); ok=false; } else clearErr(edu);
+    if (!skl.value.trim()) { setErr(skl); ok=false; } else clearErr(skl);
+  }
+  if (n === 2) {
+    const checked  = document.querySelectorAll('input[name="internship"]:checked');
+    const ci       = document.getElementById('coreInterest');
+    const iErr     = document.getElementById('internshipErr');
+    const othrBox  = document.getElementById('othr');
+    const othrText = document.getElementById('otherText');
+    if (checked.length === 0) { iErr.style.display='block'; ok=false; } else { iErr.style.display='none'; }
+    if (othrBox.checked && !othrText.value.trim()) { setErr(othrText); ok=false; } else clearErr(othrText);
+    if (!ci.value.trim()) { setErr(ci); ok=false; } else clearErr(ci);
+  }
+  if (n === 3) {
+    const why   = document.getElementById('whyMe');
+    const cv    = document.getElementById('cvFile');
+    const cvErr = document.getElementById('cvErr');
+    if (!why.value.trim() || why.value.trim().length < 50) { setErr(why); ok=false; } else clearErr(why);
+    if (!cv.files || !cv.files[0])                          { cvErr.style.display='block'; ok=false; } else { cvErr.style.display='none'; }
+  }
+  return ok;
+}
+
+document.getElementById('btnNext').addEventListener('click', () => { if (validate(current)) goTo(current + 1); });
+document.getElementById('btnBack').addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+
+// ── Char counters ────────────────────────────────────────────
+document.getElementById('skills').addEventListener('input', function() {
+  document.getElementById('skillsCount').textContent = this.value.length + ' / 300';
+});
+document.getElementById('whyMe').addEventListener('input', function() {
+  document.getElementById('whyCount').textContent = this.value.length + ' / 600';
+});
+
+// ── Other domain toggle ──────────────────────────────────────
+document.getElementById('othr').addEventListener('change', function() {
+  const reveal = document.getElementById('otherReveal');
+  const input  = document.getElementById('otherText');
+  if (this.checked) { reveal.classList.add('show'); input.focus(); }
+  else { reveal.classList.remove('show'); input.value = ''; clearErr(input); }
+});
+
+// ── File upload ──────────────────────────────────────────────
+const cvInput    = document.getElementById('cvFile');
+const uploadZone = document.getElementById('uploadZone');
+const fileNameEl = document.getElementById('fileName');
+
+function showFile(name) {
+  fileNameEl.textContent = '✓  ' + name;
+  fileNameEl.classList.add('show');
+  document.getElementById('cvErr').style.display = 'none';
+}
+cvInput.addEventListener('change', function() { if (this.files[0]) showFile(this.files[0].name); });
+uploadZone.addEventListener('dragover',  e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', ()  => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) { cvInput.files = e.dataTransfer.files; showFile(e.dataTransfer.files[0].name); }
+});
+
+// ── Collect form data ────────────────────────────────────────
+function getData() {
+  const checkedDomains = Array.from(document.querySelectorAll('input[name="internship"]:checked'));
+  const otherText = document.getElementById('otherText').value.trim();
+  const internship = checkedDomains.map(c => c.value === 'Other' && otherText ? 'Other: ' + otherText : c.value).join(', ');
+  return {
+    timestamp:      new Date().toLocaleString('en-NP', { timeZone: 'Asia/Kathmandu' }),
+    name:           document.getElementById('name').value.trim(),
+    age:            document.getElementById('age').value,
+    contact:        document.getElementById('contact').value.trim(),
+    email:          document.getElementById('email').value.trim(),
+    education:      document.getElementById('education').value,
+    certifications: document.getElementById('certifications').value.trim() || '—',
+    skills:         document.getElementById('skills').value.trim(),
+    internship,
+    coreInterest:   document.getElementById('coreInterest').value.trim(),
+    whyMe:          document.getElementById('whyMe').value.trim(),
+    cvName:         (cvInput.files[0] || {}).name || '—'
+  };
+}
+
+// ── Status banner ────────────────────────────────────────────
+function showBanner(msg) {
+  const b = document.getElementById('statusBanner');
+  document.getElementById('statusMsg').textContent = msg;
+  b.classList.add('show');
+}
+function hideBanner() {
+  document.getElementById('statusBanner').classList.remove('show');
+}
+
+// ── Preview modal ────────────────────────────────────────────
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderPreview(d) {
+  const tags = d.internship.split(', ').map(x => `<span class="preview-tag">${esc(x)}</span>`).join('');
+  return `
+    <div class="preview-section">
+      <div class="preview-section-title">Personal</div>
+      <div class="preview-grid">
+        <div class="preview-item"><div class="preview-label">Name</div><div class="preview-value">${esc(d.name)}</div></div>
+        <div class="preview-item"><div class="preview-label">Age</div><div class="preview-value">${esc(d.age)}</div></div>
+        <div class="preview-item"><div class="preview-label">Contact</div><div class="preview-value">${esc(d.contact)}</div></div>
+        <div class="preview-item"><div class="preview-label">Email</div><div class="preview-value">${esc(d.email)}</div></div>
+      </div>
+    </div>
+    <div class="preview-section">
+      <div class="preview-section-title">Education & Skills</div>
+      <div class="preview-grid">
+        <div class="preview-item"><div class="preview-label">Qualification</div><div class="preview-value">${esc(d.education)}</div></div>
+        <div class="preview-item"><div class="preview-label">Certifications</div><div class="preview-value">${esc(d.certifications)}</div></div>
+        <div class="preview-item full"><div class="preview-label">Skills</div><div class="preview-value">${esc(d.skills)}</div></div>
+      </div>
+    </div>
+    <div class="preview-section">
+      <div class="preview-section-title">Internship</div>
+      <div class="preview-grid">
+        <div class="preview-item full"><div class="preview-label">Domain(s)</div><div class="preview-tags">${tags}</div></div>
+        <div class="preview-item full"><div class="preview-label">Core Interest</div><div class="preview-value">${esc(d.coreInterest)}</div></div>
+      </div>
+    </div>
+    <div class="preview-section">
+      <div class="preview-section-title">Profile</div>
+      <div class="preview-grid">
+        <div class="preview-item full"><div class="preview-label">Why suited</div><div class="preview-value" style="white-space:pre-wrap;">${esc(d.whyMe)}</div></div>
+        <div class="preview-item full"><div class="preview-label">CV File</div><div class="preview-value">${esc(d.cvName)}</div></div>
+      </div>
+    </div>`;
+}
+
+document.getElementById('btnPreview').addEventListener('click', () => {
+  if (!validate(current)) return;
+  document.getElementById('previewBody').innerHTML = renderPreview(getData());
+  document.getElementById('previewModal').classList.add('open');
+});
+document.getElementById('closeModal').addEventListener('click', () => document.getElementById('previewModal').classList.remove('open'));
+document.getElementById('previewModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('previewModal')) document.getElementById('previewModal').classList.remove('open');
+});
+document.getElementById('editBtn').addEventListener('click', () => document.getElementById('previewModal').classList.remove('open'));
+
+// ── SUBMIT ───────────────────────────────────────────────────
+document.getElementById('submitBtn').addEventListener('click', async () => {
+  const btn     = document.getElementById('submitBtn');
+  const label   = document.getElementById('submitLabel');
+  const spinner = document.getElementById('submitSpinner');
+  const file    = cvInput.files[0];
+
+  if (!file) { showBanner('Please upload your CV before submitting.'); return; }
+
+  // Lock UI
+  btn.disabled          = true;
+  label.textContent     = 'Uploading…';
+  spinner.style.display = 'inline-block';
+  hideBanner();
+
+  try {
+    // Read file as base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader  = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = () => reject(new Error('Could not read file.'));
+      reader.readAsDataURL(file);
+    });
+
+    const payload = { ...getData(), fileContent: base64 };
+
+    // POST to Apps Script — using text/plain to avoid CORS preflight
+    const res = await fetch(SCRIPT_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    JSON.stringify(payload)
+    });
+
+    const json = await res.json();
+
+    if (json.status === 'ok') {
+      showSuccess();
+    } else {
+      throw new Error(json.message || 'Unknown error from server.');
+    }
+
+  } catch (err) {
+    // Unlock UI and show error
+    btn.disabled          = false;
+    label.textContent     = 'Submit Application';
+    spinner.style.display = 'none';
+    showBanner('Submission failed: ' + err.message + ' — Please try again.');
+    console.error('Submit error:', err);
+  }
+});
+
+// ── Show success screen ──────────────────────────────────────
+function showSuccess() {
+  document.getElementById('previewModal').classList.remove('open');
+  document.getElementById('tabsRow').style.display   = 'none';
+  document.getElementById('mainForm').style.display  = 'none';
+  document.getElementById('statusBanner').style.display = 'none';
+  document.getElementById('stepDots').style.display  = 'none';
+  document.getElementById('formNav').style.display   = 'none';
+  document.getElementById('successScreen').classList.add('show');
+  bar.style.width = '100%';
+}
+
+updateNav();
+</script>
+</body>
+</html>
